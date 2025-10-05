@@ -204,3 +204,116 @@ if ( ! function_exists( 'twentytwentyfour_pattern_categories' ) ) :
 endif;
 
 add_action( 'init', 'twentytwentyfour_pattern_categories' );
+
+
+/**
+ * Claims Grid Shortcode
+ * Usage: [claims_grid posts="6"]
+ */
+function claims_grid_shortcode($atts) {
+    $atts = shortcode_atts(array(
+        'posts' => 6,
+    ), $atts, 'claims_grid');
+
+    $args = array(
+        'post_type'      => 'claim',        // your CPT slug
+        'posts_per_page' => intval($atts['posts']),
+        'orderby'        => 'date',
+        'order'          => 'DESC',
+    );
+
+    $claims = new WP_Query($args);
+
+    if ($claims->have_posts()) {
+
+        // Start the grid
+        $output = '<div class="claims-grid">';
+
+        while ($claims->have_posts()) {
+            $claims->the_post();
+            $output .= '<div class="claim-item">';
+
+            if (has_post_thumbnail()) {
+                $output .= '<a href="' . get_permalink() . '">';
+                $output .= get_the_post_thumbnail(get_the_ID(), 'medium');
+                $output .= '</a>';
+            }
+
+            $output .= '<h3><a href="' . get_permalink() . '">' . get_the_title() . '</a></h3>';
+            $output .= '<div class="claim-excerpt">' . get_the_excerpt() . '</div>';
+            $output .= '<a href="' . get_permalink() . '">Read more →</a>';
+
+            $output .= '</div>'; // .claim-item
+        }
+
+        $output .= '</div>'; // .claims-grid
+
+        wp_reset_postdata();
+        return $output;
+    } else {
+        return '<p>No claims found.</p>';
+    }
+}
+add_shortcode('claims_grid', 'claims_grid_shortcode');
+
+/**
+ * Claims Grid CSS
+ */
+function claims_grid_styles() {
+    echo '<style>
+    .claims-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        max-width: 100%;       /* allow full width */
+        width: 100%;           /* full width of container or page */
+        margin: 0 auto;        /* center if needed */
+    }
+    @media (max-width: 1024px) {
+        .claims-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    @media (max-width: 768px) {
+        .claims-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    .claim-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Center all inner content horizontally */
+        text-align: center;
+        border: 1px solid #ddd;
+        padding: 15px;
+        box-sizing: border-box;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .claim-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .claim-item img {
+        max-width: 100%;
+        height: auto;
+        object-fit: contain;
+        margin-bottom: 10px;
+        display: block;
+    }
+    .claim-item h3 {
+        margin: 10px 0;
+    }
+    .claim-item h3 a {
+        text-decoration: none;
+        color: #333;
+    }
+    .claim-item a {
+        color: #0073aa;
+        text-decoration: none;
+    }
+    .claim-item a:hover {
+        text-decoration: underline;
+    }
+    </style>';
+}
+add_action('wp_head', 'claims_grid_styles');
