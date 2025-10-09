@@ -232,6 +232,23 @@ function claims_grid_shortcode($atts) {
         while ($claims->have_posts()) {
             $claims->the_post();
             $output .= '<div class="claim-item">';
+        
+            if (has_post_thumbnail()) {
+                $output .= '<a href="' . get_permalink() . '" class="claim-image">';
+                $output .= get_the_post_thumbnail(get_the_ID(), 'medium');
+                $output .= '</a>';
+            }
+        
+            $output .= '<h3 class="claim-title"><a href="' . get_permalink() . '">' . get_the_title() . '</a></h3>';
+            $output .= '<div class="claim-excerpt">' . get_the_excerpt() . '</div>';
+            $output .= '<a href="' . get_permalink() . '" class="claim-button">Read More</a>';
+        
+            $output .= '</div>'; // .claim-item
+        }
+
+        /*while ($claims->have_posts()) {
+            $claims->the_post();
+            $output .= '<div class="claim-item">';
 
             if (has_post_thumbnail()) {
                 $output .= '<a href="' . get_permalink() . '">';
@@ -244,7 +261,7 @@ function claims_grid_shortcode($atts) {
             $output .= '<a href="' . get_permalink() . '">Read more →</a>';
 
             $output .= '</div>'; // .claim-item
-        }
+        }*/
 
         $output .= '</div>'; // .claims-grid
 
@@ -263,11 +280,12 @@ function claims_grid_styles() {
     echo '<style>
     .claims-grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-        max-width: 100%;       /* allow full width */
-        width: 100%;           /* full width of container or page */
-        margin: 0 auto;        /* center if needed */
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        justify-content: center;
     }
     @media (max-width: 1024px) {
         .claims-grid {
@@ -280,40 +298,164 @@ function claims_grid_styles() {
         }
     }
     .claim-item {
+        background: #fbfbfb;
+        border: 1px solid #eee;
+        border-radius: 6px;
+        padding: 20px;
+        text-align: center;
         display: flex;
         flex-direction: column;
-        align-items: center; /* Center all inner content horizontally */
+        justify-content: space-between;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .claim-image img {
+        width: 100%;
+        height: auto;
+        border-radius: 4px;
+        margin-bottom: 15px;
+    }
+    .claim-title {
+        font-size: 1.25rem;
+        margin: 10px 0;
+        color: #602C90;
+    }
+    .claim-title a {
+        text-decoration: none;
+        color: inherit;
+    }
+    .claim-excerpt {
+        font-size: 0.95rem;
+        margin-bottom: 20px;
+        color: #555;
+    }
+    .claim-button {
+        display: inline-block;
+        padding: 10px 20px;
+        background: #6a1b9a; /* adjust purple shade */
+        color: #fff;
+        border-radius: 4px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: background 0.2s ease;
+    }
+    .claim-button:hover {
+        background: #4a148c;
+    }
+    </style>';
+}
+add_action('wp_head', 'claims_grid_styles');
+
+/**
+ * Resources Grid Shortcode
+ * Usage: [resources_grid posts="6"]
+ */
+function resources_grid_shortcode($atts) {
+    $atts = shortcode_atts(array(
+        'posts' => 6,
+    ), $atts, 'resources_grid');
+
+    $args = array(
+        'post_type'      => 'resource',     // your CPT slug
+        'posts_per_page' => intval($atts['posts']),
+        'orderby'        => 'date',
+        'order'          => 'DESC',
+    );
+
+    $resources = new WP_Query($args);
+
+    if ($resources->have_posts()) {
+
+        // Start the grid
+        $output = '<div class="resources-grid">';
+
+        while ($resources->have_posts()) {
+            $resources->the_post();
+            $output .= '<div class="resource-item">';
+            if (has_post_thumbnail()) {
+                $output .= '<a href="' . get_permalink() . '" class="claim-image">';
+                $output .= get_the_post_thumbnail(get_the_ID(), 'medium');
+                $output .= '</a>';
+            }
+            $output .= '<h3 class="claim-title"><a href="' . get_permalink() . '">' . get_the_title() . '</a></h3>';
+            /// $output .= '<div class="claim-excerpt">' . get_the_excerpt() . '</div>';
+            $output .= '<a href="' . get_permalink() . '" class="download-button">Download here</a>';
+
+            $output .= '</div>'; // .resource-item
+        }
+
+        $output .= '</div>'; // .resources-grid
+
+        wp_reset_postdata();
+        return $output;
+    } else {
+        return '<p>No resources found.</p>';
+    }
+}
+add_shortcode('resources_grid', 'resources_grid_shortcode');
+
+
+
+/**
+ * Resources Grid CSS
+ */
+function resources_grid_styles() {
+    echo '<style>
+    .resources-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        max-width: 100%;
+        width: 100%;
+        margin: 0 auto;
+    }
+    @media (max-width: 1024px) {
+        .resources-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    @media (max-width: 768px) {
+        .resources-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    .resource-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         text-align: center;
-        border: 1px solid #ddd;
         padding: 15px;
         box-sizing: border-box;
         transition: transform 0.2s, box-shadow 0.2s;
     }
-    .claim-item:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    }
-    .claim-item img {
+    .resource-item img {
         max-width: 100%;
         height: auto;
         object-fit: contain;
         margin-bottom: 10px;
         display: block;
     }
-    .claim-item h3 {
+    .resource-item h3 {
         margin: 10px 0;
     }
-    .claim-item h3 a {
+    .resource-item h3 a {
         text-decoration: none;
         color: #333;
     }
-    .claim-item a {
+    .resource-item a {
         color: #0073aa;
         text-decoration: none;
     }
-    .claim-item a:hover {
+    .resource-item a:hover {
         text-decoration: underline;
+    }
+    .download-button {
+        display: inline-block;
+        padding: 10px 20px;
+        text-decoration: none;
+        font-weight: bold;
     }
     </style>';
 }
-add_action('wp_head', 'claims_grid_styles');
+add_action('wp_head', 'resources_grid_styles');
+
