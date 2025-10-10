@@ -227,7 +227,7 @@ function claims_grid_shortcode($atts) {
     if ($claims->have_posts()) {
 
         // Start the grid
-        $output = '<div class="claims-grid">';
+        $output = '<h2 class="claims-header">Key Claims</h2><div class="claims-grid">';
 
         while ($claims->have_posts()) {
             $claims->the_post();
@@ -287,6 +287,9 @@ function claims_grid_styles() {
         padding: 20px;
         justify-content: center;
     }
+    h2.claims-header {
+        text-align: center;
+    }
     @media (max-width: 1024px) {
         .claims-grid {
             grid-template-columns: repeat(2, 1fr);
@@ -301,7 +304,6 @@ function claims_grid_styles() {
         background: #fbfbfb;
         border: 1px solid #eee;
         border-radius: 6px;
-        padding: 20px;
         text-align: center;
         display: flex;
         flex-direction: column;
@@ -338,6 +340,7 @@ function claims_grid_styles() {
         text-decoration: none;
         font-weight: bold;
         transition: background 0.2s ease;
+        margin: 20px;
     }
     .claim-button:hover {
         background: #4a148c;
@@ -345,6 +348,8 @@ function claims_grid_styles() {
     </style>';
 }
 add_action('wp_head', 'claims_grid_styles');
+
+
 
 /**
  * Resources Grid Shortcode
@@ -367,20 +372,28 @@ function resources_grid_shortcode($atts) {
     if ($resources->have_posts()) {
 
         // Start the grid
-        $output = '<div class="resources-grid">';
+        $output = '<h2 class="resources-header">Resources</h2><div class="resources-grid">';
 
         while ($resources->have_posts()) {
             $resources->the_post();
             $output .= '<div class="resource-item">';
-            if (has_post_thumbnail()) {
-                $output .= '<a href="' . get_permalink() . '" class="claim-image">';
-                $output .= get_the_post_thumbnail(get_the_ID(), 'medium');
-                $output .= '</a>';
-            }
-            $output .= '<h3 class="claim-title"><a href="' . get_permalink() . '">' . get_the_title() . '</a></h3>';
-            /// $output .= '<div class="claim-excerpt">' . get_the_excerpt() . '</div>';
-            $output .= '<a href="' . get_permalink() . '" class="download-button">Download here</a>';
+            
+            // Wrap the whole item content in a link for better UX
+            $output .= '<a href="' . get_permalink() . '" class="resource-card-link">';
 
+            if (has_post_thumbnail()) {
+                // The image itself is part of the card, not a separate link
+                $output .= '<div class="resource-image">';
+                $output .= get_the_post_thumbnail(get_the_ID(), 'medium');
+                $output .= '</div>';
+            }
+            
+            $output .= '<div class="resource-content">';
+            $output .= '<h3 class="resource-title">' . get_the_title() . '</h3>';
+            $output .= '<span class="download-button">Download here</span>';
+            $output .= '</div>'; // .resource-content
+
+            $output .= '</a>'; // .resource-card-link
             $output .= '</div>'; // .resource-item
         }
 
@@ -392,68 +405,86 @@ function resources_grid_shortcode($atts) {
         return '<p>No resources found.</p>';
     }
 }
+// Note: It's good practice to remove the old shortcode before adding the new one if you're editing it.
+// remove_shortcode('resources_grid'); // Uncomment if you have issues with the shortcode not updating.
 add_shortcode('resources_grid', 'resources_grid_shortcode');
-
 
 
 /**
  * Resources Grid CSS
+ * Adjusted to match the style of https://betterunis.nteu.au/election25/
  */
 function resources_grid_styles() {
     echo '<style>
     .resources-grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-        max-width: 100%;
-        width: 100%;
-        margin: 0 auto;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 32px; /* Increased gap for better spacing */
+        max-width: 1200px; /* Constrain max-width for large screens */
+        margin: 40px auto; /* Add vertical margin */
+        padding: 0 20px; /* Add horizontal padding for smaller screens */
+        padding-bottom: 80px;
     }
-    @media (max-width: 1024px) {
-        .resources-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
+    h2.resources-header {
+        text-align: center;
     }
-    @media (max-width: 768px) {
-        .resources-grid {
-            grid-template-columns: 1fr;
-        }
-    }
+
     .resource-item {
+        text-align: center;
+    }
+
+    .resource-card-link {
         display: flex;
         flex-direction: column;
-        align-items: center;
-        text-align: center;
-        padding: 15px;
-        box-sizing: border-box;
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .resource-item img {
-        max-width: 100%;
-        height: auto;
-        object-fit: contain;
-        margin-bottom: 10px;
-        display: block;
-    }
-    .resource-item h3 {
-        margin: 10px 0;
-    }
-    .resource-item h3 a {
+        height: 100%; /* Make flex items equal height */
         text-decoration: none;
+        color: inherit;
+    }
+    
+    .resource-image img {
+        width: 100%;
+        height: auto;
+        border-radius: 6px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+    
+    .resource-content {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1; /* Allows the content area to grow */
+        padding-top: 20px;
+    }
+
+    .resource-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin: 0 0 15px 0;
         color: #333;
     }
-    .resource-item a {
-        color: #0073aa;
-        text-decoration: none;
-    }
-    .resource-item a:hover {
-        text-decoration: underline;
-    }
+
     .download-button {
         display: inline-block;
-        padding: 10px 20px;
+        padding: 12px 24px;
+        background: #602c90; /* Purple color from the example site */
+        color: #ffffff;
+        border-radius: 4px;
         text-decoration: none;
         font-weight: bold;
+        transition: background-color 0.2s ease;
+        margin-top: auto; /* Pushes the button to the bottom of the card */
+    }
+
+    .download-button:hover {
+        background: #4c2373; /* Darker purple on hover */
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .resources-grid {
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
     }
     </style>';
 }
