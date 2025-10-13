@@ -338,7 +338,7 @@ function claims_grid_styles() {
         color: #fff;
         border-radius: 4px;
         text-decoration: none;
-        font-weight: bold;
+        text-transform: uppercase;
         transition: background 0.2s ease;
         margin: 20px;
     }
@@ -470,7 +470,7 @@ function resources_grid_styles() {
         color: #ffffff;
         border-radius: 4px;
         text-decoration: none;
-        font-weight: bold;
+        text-transform: uppercase;
         transition: background-color 0.2s ease;
         margin-top: auto; /* Pushes the button to the bottom of the card */
     }
