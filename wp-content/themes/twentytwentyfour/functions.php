@@ -243,7 +243,7 @@ function claims_grid_shortcode($atts) {
             $output .= '<div class="claim-excerpt">' . get_the_excerpt() . '</div>';
             $output .= '<a href="' . get_permalink() . '" class="claim-button">Read More</a>';
         
-            $output .= '</div>'; // .claim-item
+            $output .= '</div>';
         }
 
         /*while ($claims->have_posts()) {
@@ -272,82 +272,6 @@ function claims_grid_shortcode($atts) {
     }
 }
 add_shortcode('claims_grid', 'claims_grid_shortcode');
-
-/**
- * Claims Grid CSS
- */
-function claims_grid_styles() {
-    echo '<style>
-    .claims-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 30px;
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
-        justify-content: center;
-    }
-    h2.claims-header {
-        text-align: center;
-    }
-    @media (max-width: 1024px) {
-        .claims-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-    @media (max-width: 768px) {
-        .claims-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-    .claim-item {
-        background: #fbfbfb;
-        border: 1px solid #eee;
-        border-radius: 6px;
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .claim-image img {
-        width: 100%;
-        height: auto;
-        border-radius: 4px;
-        margin-bottom: 15px;
-    }
-    .claim-title {
-        font-size: 1.25rem;
-        margin: 10px 0;
-        color: #602C90;
-    }
-    .claim-title a {
-        text-decoration: none;
-        color: inherit;
-    }
-    .claim-excerpt {
-        font-size: 0.95rem;
-        margin-bottom: 20px;
-        color: #555;
-    }
-    .claim-button {
-        display: inline-block;
-        padding: 10px 20px;
-        background: #6a1b9a; /* adjust purple shade */
-        color: #fff;
-        border-radius: 4px;
-        text-decoration: none;
-        text-transform: uppercase;
-        transition: background 0.2s ease;
-        margin: 20px;
-    }
-    .claim-button:hover {
-        background: #4a148c;
-    }
-    </style>';
-}
-add_action('wp_head', 'claims_grid_styles');
 
 
 
@@ -389,8 +313,8 @@ function resources_grid_shortcode($atts) {
             }
             
             $output .= '<div class="resource-content">';
-            $output .= '<h3 class="resource-title">' . get_the_title() . '</h3>';
-            $output .= '<span class="download-button">Download here</span>';
+              $output .= '<h3 class="resource-title">' . get_the_title() . '</h3>';
+              $output .= '<span class="download-button">Download here</span>';
             $output .= '</div>'; // .resource-content
 
             $output .= '</a>'; // .resource-card-link
@@ -410,95 +334,100 @@ function resources_grid_shortcode($atts) {
 add_shortcode('resources_grid', 'resources_grid_shortcode');
 
 
-/**
- * Resources Grid CSS
- * Adjusted to match the style of https://betterunis.nteu.au/election25/
- */
-function resources_grid_styles() {
-    echo '<style>
-    .resources-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 32px; /* Increased gap for better spacing */
-        max-width: 1200px; /* Constrain max-width for large screens */
-        margin: 40px auto; /* Add vertical margin */
-        padding: 0 20px; /* Add horizontal padding for smaller screens */
-        padding-bottom: 80px;
-    }
-    h2.resources-header {
-        text-align: center;
-    }
-
-    .resource-item {
-        text-align: center;
-    }
-
-    .resource-card-link {
-        display: flex;
-        flex-direction: column;
-        height: 100%; /* Make flex items equal height */
-        text-decoration: none;
-        color: inherit;
-    }
-    
-    .resource-image img {
-        width: 100%;
-        height: auto;
-        border-radius: 6px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-    }
-    
-    .resource-content {
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1; /* Allows the content area to grow */
-        padding-top: 20px;
-    }
-
-    .resource-title {
-        font-size: 1.25rem;
-        font-weight: 600;
-        margin: 0 0 15px 0;
-        color: #333;
-    }
-
-    .download-button {
-        display: inline-block;
-        padding: 12px 24px;
-        background: #602c90; /* Purple color from the example site */
-        color: #ffffff;
-        border-radius: 4px;
-        text-decoration: none;
-        text-transform: uppercase;
-        transition: background-color 0.2s ease;
-        margin-top: auto; /* Pushes the button to the bottom of the card */
-    }
-
-    .download-button:hover {
-        background: #4c2373; /* Darker purple on hover */
-    }
-    
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-        .resources-grid {
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-        }
-    }
-    </style>';
-}
-add_action('wp_head', 'resources_grid_styles');
 
 function acf_header_text_shortcode() {
     $header_text = get_field('header_text', 'option');
     if ( ! $header_text ) {
         $header_text = get_field('header_text');
     }
-    if ( $header_text ) {
-        return '<div class="header-text-wrapper"><div class="custom-header-text">' . esc_html($header_text) . '</div></div>';
+    $cta_button_label = get_field('cta_button_label', 'option');
+    if (! $cta_button_label) {
+        $cta_button_label = get_field('cta_button_label');
+    }
+    if ( $header_text || $cta_button_label) {
+        $result = '<div class="header-text-wrapper">';
+        if ($header_text) { $result .= '<div class="custom-header-text">' . esc_html($header_text) . '</div>'; }
+        if ($cta_button_label) { $result .= '<div class="custom-header-cta-button"><button>' . esc_html($cta_button_label) . '</button></div>'; }
+        $result .= '</div>';
+        return $result;
     }
 }
 add_shortcode('acf_header_text', 'acf_header_text_shortcode');
 
+
+/**
+ * Shortcode to show optional ACF footer background image.
+ * Usage: [footer_bg]
+ */
+function custom_footer_bg_shortcode() {
+    // Try per-page image first
+    $footer_bg = get_field('footer_background_image');
+
+    // Fallback to global options page image (if exists)
+    if ( ! $footer_bg ) {
+        $footer_bg = get_field('footer_background_image', 'option');
+    }
+
+    // If there’s no image — return nothing
+    if ( ! $footer_bg ) {
+        return '';
+    }
+
+    // Get URL depending on return format
+    $bg_url = is_array($footer_bg) ? $footer_bg['url'] : $footer_bg;
+
+    // Return styled div (you can tweak classes or inline CSS)
+    return sprintf(
+        '<div class="custom-footer-bg" style="background-image:url(%s);background-repeat:no-repeat;"></div>',
+        esc_url($bg_url)
+    );
+}
+add_shortcode('footer_bg', 'custom_footer_bg_shortcode');
+
+
+/**
+ * Shortcode to render social icons using ACF URLs
+ * Usage: [social_links]
+ */
+function custom_social_links_shortcode() {
+    // Get ACF fields (supports both page-level and global)
+    $settings_page_id = 307;
+    $twitter  = get_field('twitter_url', $settings_page_id);
+    $facebook = get_field('facebook_url', $settings_page_id);
+    $linkedin = get_field('linkedin_url', $settings_page_id);
+
+    // If no links, return nothing
+    if ( ! $twitter && ! $facebook && ! $linkedin ) {
+        return '';
+    }
+
+    ob_start(); // Start HTML buffering
+    ?>
+    <div class="wp-block-group is-vertical is-layout-flex wp-block-group-is-layout-flex">
+        <nav class="has-text-color has-base-2-color has-small-font-size wp-block-navigation is-horizontal is-layout-flex wp-block-navigation-is-layout-flex" aria-label="Social Media">
+            <ul class="wp-block-navigation__container social-links has-text-color has-base-2-color has-small-font-size wp-block-navigation has-small-font-size" aria-label="Social Media">
+                <?php if ( $twitter ) : ?>
+                    <li class="has-small-font-size wp-block-navigation-item wp-block-navigation-link"><a class="fab fa-twitter fa-2x wp-block-navigation-item__content" href="<?php echo esc_url( $twitter ); ?>" target="_blank" rel="noopener noreferrer"><span class="wp-block-navigation-item__label"></span>
+                        </a>
+                    </li>
+                <?php endif; ?>
+
+                <?php if ( $facebook ) : ?>
+                    <li class="has-small-font-size wp-block-navigation-item wp-block-navigation-link"><a class="fab fa-facebook-f fa-2x wp-block-navigation-item__content" href="<?php echo esc_url( $facebook ); ?>" target="_blank" rel="noopener noreferrer"><span class="wp-block-navigation-item__label"></span>
+                        </a>
+                    </li>
+                <?php endif; ?>
+
+                <?php if ( $linkedin ) : ?>
+                    <li class="has-small-font-size wp-block-navigation-item wp-block-navigation-link"><a class="fab fa-linkedin fa-2x wp-block-navigation-item__content" href="<?php echo esc_url( $linkedin ); ?>" target="_blank" rel="noopener noreferrer"><span class="wp-block-navigation-item__label"></span>
+                        </a>
+                    </li>
+                <?php endif; ?>
+            </ul>
+        </nav>
+    </div>
+    <?php
+    return ob_get_clean(); // Return the generated HTML
+}
+add_shortcode( 'social_links', 'custom_social_links_shortcode' );
 
