@@ -490,3 +490,15 @@ function resources_grid_styles() {
 }
 add_action('wp_head', 'resources_grid_styles');
 
+function acf_header_text_shortcode() {
+    $header_text = get_field('header_text', 'option');
+    if ( ! $header_text ) {
+        $header_text = get_field('header_text');
+    }
+    if ( $header_text ) {
+        return '<div class="header-text-wrapper"><div class="custom-header-text">' . esc_html($header_text) . '</div></div>';
+    }
+}
+add_shortcode('acf_header_text', 'acf_header_text_shortcode');
+
+

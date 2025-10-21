@@ -1,0 +1,86 @@
+:where(.wp-site-blocks *:focus){outline-width:2px;outline-style:solid}
+.footer-block {
+background-color: #252a2d;
+}
+.footer-block p {
+color: #6d6e71;
+}
+.purple-block {
+background-color: #784e96;
+}
+.purple-block p {
+color: #ffffff;
+}
+
+.purple-block .wp-block-button__link {
+background-color: #fff;
+color: #666;
+}
+
+.social-icon {
+display: inline-block !important;
+width: 24px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Gilroy', sans-serif;
+color: #632A96;
+font-weight: bold;
+}
+
+.full-width-banner {
+  min-height: 473px !important;
+  background-position: center !important;
+}
+
+
+
+/* The Wrapper (DIV) 
+  We make this a block, center it, give it a max-width,
+  and apply the rotation to IT.
+*/
+.header-text-wrapper {
+  display: block;
+  position: relative;
+  width: max-content; 
+  max-width: 100%; 
+  margin: 2rem auto; 
+  text-align: center; 
+  transform: rotate(-8deg);
+  transform-origin: center center;
+}
+
+/* The Text (SPAN) 
+  We change this to 'inline' so the background
+  can wrap each line.
+*/
+.custom-header-text {
+  /* THIS IS THE KEY CHANGE */
+  display: inline; 
+  font-weight: 800;
+  font-size: 2.4rem;
+  line-height: 1.5;
+  color: #2b004d; /* dark purple text */
+  
+  /* These properties now work correctly */
+  background: #ffffff;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  padding: 0.3em 0.6em;
+  
+  /* Remove transform and shadow from here */
+}
+
+/* 📱 Mobile-friendly adjustments */
+@media (max-width: 768px) {
+  /* Apply the mobile rotation to the WRAPPER */
+  .header-text-wrapper {
+    transform: rotate(-4deg);
+  }
+  
+  /* Adjust font size and padding on the TEXT */
+  .custom-header-text {
+    font-size: 1.6rem;
+    padding: 0.25em 0.5em;
+  }
+}
