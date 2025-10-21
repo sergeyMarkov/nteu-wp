@@ -33,54 +33,75 @@ font-weight: bold;
   background-position: center !important;
 }
 
-
-
-/* The Wrapper (DIV) 
-  We make this a block, center it, give it a max-width,
-  and apply the rotation to IT.
-*/
 .header-text-wrapper {
   display: block;
   position: relative;
   width: max-content; 
   max-width: 100%; 
+  margin-top: 32px !important;
+  margin-bottom: 20px !important;
   margin: 2rem auto; 
   text-align: center; 
   transform: rotate(-8deg);
   transform-origin: center center;
 }
 
-/* The Text (SPAN) 
-  We change this to 'inline' so the background
-  can wrap each line.
-*/
 .custom-header-text {
-  /* THIS IS THE KEY CHANGE */
   display: inline; 
   font-weight: 800;
   font-size: 2.4rem;
-  line-height: 1.5;
+  line-height: 1.4;
   color: #2b004d; /* dark purple text */
-  
-  /* These properties now work correctly */
   background: #ffffff;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
-  padding: 0.3em 0.6em;
-  
-  /* Remove transform and shadow from here */
+  padding: 0.2em 0.6em;
 }
 
-/* 📱 Mobile-friendly adjustments */
 @media (max-width: 768px) {
-  /* Apply the mobile rotation to the WRAPPER */
   .header-text-wrapper {
     transform: rotate(-4deg);
   }
-  
-  /* Adjust font size and padding on the TEXT */
   .custom-header-text {
     font-size: 1.6rem;
     padding: 0.25em 0.5em;
   }
+}
+
+.wp-block-site-logo,
+.last-column
+ {
+  align-self: flex-start;
+  margin-top: 20px !important;
+}
+
+.is-layout-flex {
+align-self: flex-start;
+}
+
+.custom-header-cta-button {
+  margin-top: 1.5rem;
+}
+
+.custom-header-cta-button button {
+  /* --- Your direct requests --- */
+  background-color: #2b004d;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 700;     
+  padding: 12px 28px;   
+  border: 1px solid #6a5acd;
+  border-radius: 8px;  
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease-in-out;
+}
+
+.custom-header-cta-button button:hover {
+  background-color: #4a008a;
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
 }
